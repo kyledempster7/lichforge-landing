@@ -1,0 +1,175 @@
+:root {
+  --bg-obsidian: #020507;
+  --cyan-glow: #22d3ee;
+  --ice-text: #c2f0f5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-obsidian); /* html only: a body background would paint over the z-index:-1 backdrop and mist */
+}
+
+html, body {
+  height: 100%;
+  color: var(--ice-text);
+  overflow: hidden;
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Deep radial vignette matching the smoky cyan atmosphere */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(14, 74, 88, 0.34) 0%, rgba(4, 18, 24, 0.65) 45%, #010304 100%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Rising lich-mist smoke layers */
+.mist {
+  position: fixed;
+  left: -15%;
+  width: 130%;
+  height: 75vh;
+  bottom: -35vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  filter: blur(55px);
+  background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.24) 0%, rgba(14, 165, 233, 0.1) 45%, transparent 72%);
+  animation: riseMist 18s ease-in-out infinite;
+}
+
+.mist--two {
+  height: 85vh;
+  bottom: -45vh;
+  background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.16) 0%, rgba(13, 148, 136, 0.08) 50%, transparent 75%);
+  animation-duration: 25s;
+  animation-delay: -9s;
+}
+
+@keyframes riseMist {
+  0%   { transform: translateY(12vh) scale(0.92); opacity: 0; }
+  25%  { opacity: 0.75; }
+  75%  { opacity: 0.45; }
+  100% { transform: translateY(-65vh) scale(1.18); opacity: 0; }
+}
+
+/* Dual particle canvas (falling frost + rising wisps) */
+#atmosphere {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Main centered tight vertical lockup */
+main {
+  /* No z-index: main must not form a stacking context, or the logo's
+     mix-blend-mode: screen could not blend with the backdrop behind it. */
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.8vh, 1.85rem);
+  padding: 2rem 1.25rem;
+}
+
+/* Cropped logo blends seamlessly into backdrop via screen mode */
+.logo {
+  width: min(76vw, 440px);
+  height: auto;
+  display: block;
+  mix-blend-mode: screen;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Ornate beveled fantasy Discord button */
+.discord-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: min(88vw, 355px);
+  height: 84px;
+  text-decoration: none;
+  color: var(--ice-text);
+  transition: transform 0.22s ease, filter 0.22s ease;
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.32)) drop-shadow(0 10px 24px rgba(0, 0, 0, 0.75));
+}
+
+.discord-btn:hover,
+.discord-btn:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  filter: drop-shadow(0 0 26px rgba(34, 211, 238, 0.62)) drop-shadow(0 12px 28px rgba(0, 0, 0, 0.85));
+  outline: none;
+}
+
+.discord-btn:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.btn-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 34px;
+}
+
+.clyde-icon {
+  width: 44px;
+  height: auto;
+  fill: #9fe9f2;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.45));
+  flex-shrink: 0;
+}
+
+.btn-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+}
+
+.btn-kicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #a6e3eb;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.btn-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  background: linear-gradient(180deg, #e2fbff 0%, #8adce6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.85));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist { animation: none; opacity: 0.25; }
+}
