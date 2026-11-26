@@ -3,7 +3,7 @@
 
 Usage: python3 scripts/prep_assets.py "path/to/lichforge logo vert.png"
 The 1024x1536 source logo is not kept in this repo (it would be served publicly).
-Writes assets/lichforge-logo.{png,webp}, assets/favicon.png, favicon.ico.
+Writes assets/lichforge-logo.{png,webp}, assets/lichforge-og.png, assets/favicon.png, favicon.ico.
 """
 import sys
 from pathlib import Path
@@ -46,6 +46,8 @@ def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     src = Image.open(Path(sys.argv[1])).convert("RGB")
+    # Link previews (og:image) keep the black background: preview cards may be white.
+    save_png(src.crop(LOGO_BOX), ROOT / "assets" / "lichforge-og.png")
     logo = black_to_alpha(src.crop(LOGO_BOX))
     save_png(logo, ROOT / "assets" / "lichforge-logo.png")
     logo.save(ROOT / "assets" / "lichforge-logo.webp", format="WEBP", quality=92, method=6)
